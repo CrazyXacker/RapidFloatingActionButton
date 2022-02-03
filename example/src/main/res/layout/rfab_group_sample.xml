@@ -4,20 +4,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
             android:id="@+id/rfab_group_sample_vp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             >
 
-        <android.support.v4.view.PagerTabStrip
+        <androidx.viewpager.widget.PagerTabStrip
                 android:id="@+id/rfab_group_sample_pts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
                 />
-    </android.support.v4.view.ViewPager>
+    </androidx.viewpager.widget.ViewPager>
 
 
     <com.wangjie.rapidfloatingactionbutton.rfabgroup.RapidFloatingActionButtonGroup
