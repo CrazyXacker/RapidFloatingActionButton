@@ -1,52 +1,39 @@
 package com.wangjie.rapidfloatingactionbutton.widget;
 
 import android.content.Context;
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Paint;
+import android.graphics.PixelFormat;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
-/**
- * <code>
- * if (Build.VERSION.SDK_INT > Build.VERSION_CODES.HONEYCOMB) {
- * view.setLayerType(LAYER_TYPE_SOFTWARE, drawable.getPaint());
- * }
- * </code>
- * <p/>
- * Author: wangjie
- * Email: tiantian.china.2@gmail.com
- * Date: 5/2/15.
- */
+import com.wangjie.rapidfloatingactionbutton.util.RFABTextUtil;
+
 public class CircleButtonDrawable extends Drawable {
-    private Context context;
-    private Paint paint;
+    private final Context context;
+    private final Paint paint;
 
-    private RectF bounds = new RectF();
-    private float halfLen;
-
-    private CircleButtonProperties circleButtonProperties;
-    private int realSizePx;
+    private final CircleButtonProperties circleButtonProperties;
+    private final RectF bounds = new RectF();
+    private float len;
+    private final int roundPx;
 
     public CircleButtonDrawable(Context context, CircleButtonProperties circleButtonProperties, int color) {
         this.context = context;
         this.circleButtonProperties = circleButtonProperties;
         paint = new Paint();
         paint.setAntiAlias(true);
-        /**
-         * 解决旋转时的锯齿问题
-         */
         paint.setFilterBitmap(true);
         paint.setDither(true);
         paint.setStyle(Paint.Style.FILL);
         paint.setColor(color);
-        /**
-         * 设置阴影
-         */
         int dx = circleButtonProperties.getShadowDx();
         int dy = circleButtonProperties.getShadowDy();
         paint.setShadowLayer(circleButtonProperties.getShadowRadius(), dx, dy, circleButtonProperties.getShadowColor());
-        /**
-         * 设置绘制的大小范围
-         */
-        realSizePx = this.circleButtonProperties.getRealSizePx(context);
+        roundPx = RFABTextUtil.dip2px(context, 16);
+        int realSizePx = this.circleButtonProperties.getRealSizePx(context);
         this.setBounds(0, 0, realSizePx, realSizePx);
     }
 
@@ -58,9 +45,9 @@ public class CircleButtonDrawable extends Drawable {
             this.bounds.right = bounds.right;
             this.bounds.top = bounds.top;
             this.bounds.bottom = bounds.bottom;
-            halfLen = Math.min(
-                    (this.bounds.right - this.bounds.left) / 2,
-                    (this.bounds.bottom - this.bounds.top) / 2
+            len = Math.min(
+                    (this.bounds.right - this.bounds.left),
+                    (this.bounds.bottom - this.bounds.top)
             );
             invalidateSelf();
         }
@@ -68,7 +55,9 @@ public class CircleButtonDrawable extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
-        canvas.drawCircle(halfLen, halfLen, circleButtonProperties.getStandardSizePx(context) / 2, paint);
+        int size = circleButtonProperties.getStandardSizePx(context);
+        float start = (len - size) / 2;
+        canvas.drawRoundRect(start, start, start + size, start + size, roundPx, roundPx, paint);
     }
 
     public Paint getPaint() {
@@ -92,6 +81,6 @@ public class CircleButtonDrawable extends Drawable {
 
     @Override
     public int getOpacity() {
-        return 0;
+        return PixelFormat.UNKNOWN;
     }
 }
